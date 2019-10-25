@@ -1,0 +1,83 @@
+//- player-info.pug
+include ../partials/header.pug
+include ../partials/menu.pug
+
+div.container
+  br
+  div.row
+    div.col-4
+      div.card
+        //- TODO: Modify the pug code below to conditionally set the image_src
+        - var image_src
+        - if(selected_player)
+          for player in selected_player
+            - image_src = "../" + player.img_src
+            
+        -else
+          - image_src = '../../resources/img/helmet.jpg'
+
+        img.card-img-top#player_img(src= image_src, alt="Football Player")
+        div.card-body.mx-auto
+          form.form(action="/player_info/post", method="get")
+            select.custom-select(name="player_choice", onchange="this.form.submit()")
+              //- Todo: Populate the select with player options. Set the value to the player's id and display the player's name.
+              - if(selected_player)
+                for player in selected_player
+                  option(selected)=player.name
+                  for player1 in all
+                    - if (player.name != player1.name)
+                      option(value=player1.id)=player1.name
+                  
+              -else
+                option(selected) Select Player
+                for player in all
+                  option(value=player.id)=player.name
+              
+    div.col-8
+      div.table-responsive
+        table.table
+          //- todo: Set the player's information. On select, fill in the player's information in each of the field below. You will need to calculate the average rushing, receiving, and passing yards.
+          - if(selected_player)
+            for player in selected_player
+              for games_played1 in games_played
+                tr
+                  th Year
+                  td=player.year
+                tr
+                  th Major
+                  td=player.major
+                tr
+                  th Games Played
+                  td=games_played1.value
+                tr
+                  td Passing Yards:
+                  td=player.passing_yards
+                  td Avg. Passing Yards:
+                  td=player.passing_yards / games_played1.value
+                tr
+                  td Rushing Yards: 
+                  td=player.rushing_yards
+                  td Avg. Rushing Yards:
+                  td=player.rushing_yards / games_played1.value
+                tr
+                  td Receiving Yards:
+                  td=player.receiving_yards
+                  td Avg. Receiving Yards:
+                  td=player.receiving_yards / games_played1.value
+          - else
+            tr
+              th Year
+            tr
+              th Major
+            tr
+              th Games Played
+            tr
+              td Passing Yards:
+            tr
+              td Rushing Yards: 
+              td Avg. Rushing Yards:
+            tr
+              td Receiving Yards:
+              td Avg. Receiving Yards:
+
+include ../partials/footer.pug
